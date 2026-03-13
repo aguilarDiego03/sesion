@@ -3,12 +3,11 @@ import flet as ft
 def main(page: ft.Page):
     page.title = "Inicio de sesion"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    #page.bgcolor = ft.Colors.RED_
-    
-    usuario_valido ="admin@gamil.com"
-    password_valido ="123"
-    
 
+    usuario_valido = "admin@gmail.com"
+    password_valido = "123"
+
+    mensaje = ft.Text()
 
     contraseña = ft.TextField(
         label="Contraseña",
@@ -25,8 +24,41 @@ def main(page: ft.Page):
         width=300
     )
 
+    def login(e):
+
+        if correo.value == "" or contraseña.value == "":
+            mensaje.value = "Error: Debes llenar todos los campos"
+            mensaje.color = "red"
+            page.update()
+            return
+
+        if "@" not in correo.value or "." not in correo.value:
+            mensaje.value = "Error: Ingresa un correo válido"
+            mensaje.color = "red"
+            page.update()
+            return
+
+        if correo.value == usuario_valido and contraseña.value == password_valido:
+            page.clean()
+
+            page.add(
+                ft.Column(
+                    [
+                        ft.Text("Felicidades, has iniciado sesión", size=30, weight=ft.FontWeight.BOLD),
+                        ft.Text("Bienvenido al sistema")
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                )
+            )
+        else:
+            mensaje.value = "Correo o contraseña incorrectos"
+            mensaje.color = "red"
+            page.update()
+
     inicio = ft.ElevatedButton(
-        "Iniciar sesion"
+        "Iniciar sesion",
+        on_click=login
     )
 
     crear = ft.ElevatedButton(
@@ -39,20 +71,12 @@ def main(page: ft.Page):
                 ft.Text("Inicio de sesion", size=20, weight=ft.FontWeight.BOLD),
                 correo,
                 contraseña,
-                ft.Row([inicio, crear], alignment=ft.MainAxisAlignment.CENTER)
+                ft.Row([inicio, crear], alignment=ft.MainAxisAlignment.CENTER),
+                mensaje
             ],
             spacing=15,
-            horizontal_alignment = ft.CrossAxisAlignment.CENTER
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
         )
     )
-
-def login(e):
-    if correo.value == usuario_valido and contraseña.value == password_valido:
-        mensaje.value="Inicio de sesion exitoso"
-        mensaje.color="green"
-    else:
-        mensaje.value="Correo o contraseñas inorrectos"
-        mensaje.color="red"
-        
 
 ft.app(target=main)
